@@ -235,7 +235,7 @@
 		var/obj/machinery/vending/attachments/A = X
 
 		//Forcefully reset the product list
-		A.product_records = list()
+		A.product_records = null
 
 		A.products = list(
 					/obj/item/attachable/suppressor = round(scale * 14),
@@ -280,7 +280,7 @@
 		var/obj/machinery/vending/marine/cargo_ammo/CA = X
 
 		//Forcefully reset the product list
-		CA.product_records = list()
+		CA.product_records = null
 
 		CA.products = list(
 						/obj/item/ammobox/m4a3 = round(scale * 3),
@@ -332,7 +332,7 @@
 		var/obj/machinery/vending/marine/cargo_guns/CG = X
 
 		//Forcefully reset the product list
-		CG.product_records = list()
+		CG.product_records = null
 
 		CG.products = list(
 						/obj/item/storage/backpack/marine/standard = round(scale * 15),
@@ -401,7 +401,7 @@
 	for(var/obj/machinery/vending/marine/M in GLOB.marine_vendors)
 
 		//Forcefully reset the product list
-		M.product_records = list()
+		M.product_records = null
 
 		M.products = list(
 						/obj/item/weapon/gun/pistol/m4a3 = round(scale * 30),

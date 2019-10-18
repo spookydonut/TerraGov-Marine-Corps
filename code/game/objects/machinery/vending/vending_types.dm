@@ -398,13 +398,13 @@
 
 		if(hidden)
 			R.category = CAT_HIDDEN
-			hidden_records += R
+			LAZYADD(hidden_records, R)
 		else if(req_coin)
 			R.category = CAT_COIN
-			coin_records += R
+			LAZYADD(coin_records, R)
 		else
 			R.category = CAT_NORMAL
-			product_records += R
+			LAZYADD(product_records, R)
 
 		R.product_name = initial(temp_path.name)
 

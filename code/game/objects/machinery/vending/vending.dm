@@ -10,6 +10,10 @@
 	var/display_color = "white"
 	var/category = CAT_NORMAL
 
+/datum/scaled_vending
+	var/product_path
+	var/scaling_factor = 1
+
 /obj/machinery/vending
 	name = "Vendomat"
 	desc = "A generic vending machine."
@@ -37,11 +41,10 @@
 
 	var/product_slogans = "" //String of slogans separated by semicolons, optional
 	var/product_ads = "" //String of small ad messages in the vending screen - random chance
-	var/list/product_records = list()
-	var/list/hidden_records = list()
-	var/list/coin_records = list()
-	var/list/slogan_list = list()
-	var/list/small_ads = list() // small ad messages in the vending screen - random chance of popping up whenever you open it
+	var/list/product_records
+	var/list/hidden_records
+	var/list/coin_records
+	var/list/slogan_list
 	var/vend_reply //Thank you for shopping!
 	var/last_reply = 0
 	var/last_slogan = 0 //When did we last pitch?
@@ -69,7 +72,6 @@
 /obj/machinery/vending/Initialize(mapload, ...)
 	. = ..()
 	wires = new /datum/wires/vending(src)
-	src.slogan_list = text2list(src.product_slogans, ";")
 
 	// So not all machines speak at the exact same time.
 	// The first time this machine says something will be at slogantime + this random value,
@@ -132,13 +134,13 @@
 
 		if(hidden)
 			R.category=CAT_HIDDEN
-			hidden_records += R
+			LAZYADD(hidden_records, R)
 		else if(req_coin)
 			R.category=CAT_COIN
-			coin_records += R
+			LAZYADD(coin_records, R)
 		else
 			R.category=CAT_NORMAL
-			product_records += R
+			LAZYADD(product_records, R)
 
 		if(ispath(typepath, /obj/item/seeds))
 			var/obj/item/seeds/S = typepath
@@ -314,26 +316,24 @@
 
 
 /obj/machinery/vending/proc/GetProductIndex(datum/data/vending_product/P)
-	var/list/plist
 	switch(P.category)
 		if(CAT_NORMAL)
-			plist=product_records
+			return LAZYFIND(product_records, P)
 		if(CAT_HIDDEN)
-			plist=hidden_records
+			return LAZYFIND(hidden_records, P)
 		if(CAT_COIN)
-			plist=coin_records
+			return LAZYFIND(coin_records, P)
 		else
 			stack_trace("UNKNOWN CATEGORY [P.category] IN TYPE [P.product_path] INSIDE [type]!")
-	return plist.Find(P)
 
 /obj/machinery/vending/proc/GetProductByID(pid, category)
 	switch(category)
 		if(CAT_NORMAL)
-			return product_records[pid]
+			return LAZYACCESS(product_records, pid)
 		if(CAT_HIDDEN)
-			return hidden_records[pid]
+			return LAZYACCESS(hidden_records, pid)
 		if(CAT_COIN)
-			return coin_records[pid]
+			return LAZYACCESS(coin_records, pid)
 		else
 			stack_trace("UNKNOWN PRODUCT: PID: [pid], CAT: [category] INSIDE [type]!")
 			return null
@@ -556,7 +556,7 @@
 		src.seconds_electrified--
 
 	//Pitch to the people!  Really sell it!
-	if(((src.last_slogan + src.slogan_delay) <= world.time) && (src.slogan_list.len > 0) && (!src.shut_up) && prob(5))
+	if(((src.last_slogan + src.slogan_delay) <= world.time) && LAZYLEN(slogan_list.len) && (!src.shut_up) && prob(5))
 		var/slogan = pick(src.slogan_list)
 		src.speak(slogan)
 		src.last_slogan = world.time
