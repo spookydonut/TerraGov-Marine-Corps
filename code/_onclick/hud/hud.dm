@@ -5,6 +5,15 @@
 	including inventories and item quick actions.
 */
 
+// The default UI style is the first one in the list
+GLOBAL_LIST_INIT(available_ui_styles, sortList(list(
+	"Midnight" = 'icons/mob/screen/midnight.dmi',
+	"Alien" = 'icons/mob/screen/alien.dmi',
+)))
+
+/proc/ui_style2icon(ui_style)
+	return GLOB.available_ui_styles[ui_style] || GLOB.available_ui_styles[GLOB.available_ui_styles[1]]
+
 /datum/hud
 	var/mob/mymob
 
@@ -14,8 +23,6 @@
 	var/show_intent_icons = 0
 	var/hotkey_ui_hidden = 0	//This is to hide the buttons that can be used via hotkeys. (hotkeybuttons list of buttons)
 
-	var/obj/screen/r_hand_hud_object
-	var/obj/screen/l_hand_hud_object
 	var/obj/screen/action_intent
 	var/obj/screen/move_intent
 	var/obj/screen/alien_plasma_display
@@ -39,8 +46,6 @@
 	var/obj/screen/oxygen_icon
 	var/obj/screen/pressure_icon
 	var/obj/screen/toxin_icon
-	var/obj/screen/internals
-	var/obj/screen/healths
 	var/obj/screen/fire_icon
 	var/obj/screen/bodytemp_icon
 
@@ -55,15 +60,28 @@
 	var/list/toggleable_inventory = list() //the screen objects which can be hidden
 	var/list/obj/screen/hotkeybuttons = list() //the buttons that can be used via hotkeys
 	var/list/infodisplay = list() //the screen objects that display mob info (health, alien plasma, etc...)
-
-	var/obj/screen/action_button/hide_toggle/hide_actions_toggle
-	var/action_buttons_hidden = 0
-
+	var/list/screenoverlays = list() //the screen objects used as whole screen overlays (flash, damageoverlay, etc...)
+	var/list/inv_slots[SLOTS_AMT] // /obj/screen/inventory objects, ordered by their slot ID.
+	var/list/hand_slots // /obj/screen/inventory/hand objects, assoc list of "[held_index]" = object
 	var/list/obj/screen/plane_master/plane_masters = list() // see "appearance_flags" in the ref, assoc list of "[plane]" = object
 
+	var/obj/screen/action_button/hide_toggle/hide_actions_toggle
+	var/action_buttons_hidden = FALSE
+
+	var/obj/screen/healths
+	var/obj/screen/healthdoll
+	var/obj/screen/internals
+
+	// subtypes can override this to force a specific UI style
+	var/ui_style
 
 /datum/hud/New(mob/owner)
 	mymob = owner
+
+	if (!ui_style)
+		// will fall back to the default if any of these are null
+		ui_style = ui_style2icon(owner.client && owner.client.prefs && owner.client.prefs.UI_style)
+
 	hide_actions_toggle = new
 
 	for(var/mytype in subtypesof(/obj/screen/plane_master))
