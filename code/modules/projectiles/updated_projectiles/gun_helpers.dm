@@ -841,9 +841,7 @@ should be alright.
 
 
 /obj/item/weapon/gun/item_action_slot_check(mob/user, slot)
-	if(slot != SLOT_L_HAND && slot != SLOT_R_HAND)
-		return FALSE
-	return TRUE
+	return (slot == SLOT_HANDS)
 
 /obj/item/weapon/gun/proc/get_ammo_type()
 	return FALSE

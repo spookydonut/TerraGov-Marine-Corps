@@ -303,13 +303,12 @@
 
 
 /datum/component/automatic_fire/proc/itemgun_equipped(datum/source, mob/shooter, slot)
-	switch(slot)
-		if(SLOT_L_HAND, SLOT_R_HAND)
-			autofire_on(shooter.client)
-		else
-			switch(autofire_stat)
-				if(AUTOFIRE_STAT_ALERT, AUTOFIRE_STAT_FIRING)
-					autofire_off()
+	if(slot == SLOT_HANDS)
+		autofire_on(shooter.client)
+		return
+	switch(autofire_stat)
+		if(AUTOFIRE_STAT_ALERT, AUTOFIRE_STAT_FIRING)
+			autofire_off()
 
 
 /datum/component/automatic_fire/proc/modify_firedelay(datum/source, new_delay)

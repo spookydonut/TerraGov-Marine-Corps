@@ -12,7 +12,7 @@
 				to_chat(src, "<span class='danger'>It becomes hard to see for some reason.</span>")
 				blur_eyes(10)
 		if(7 to 9)
-			if((hand && get_held_item()) && getBrainLoss())
+			if((hand && get_active_held_item()) && getBrainLoss())
 				to_chat(src, "<span class='danger'>Your hand won't respond properly, you drop what you're holding.</span>")
 				drop_held_item()
 		if(10 to 12)

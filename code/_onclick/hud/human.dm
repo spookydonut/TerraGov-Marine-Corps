@@ -26,6 +26,9 @@
 	var/obj/screen/using
 	var/obj/screen/inventory/inv_box
 
+//hands
+	build_hand_slots()
+
 	// Draw the various inventory equipment slots.
 	var/has_hidden_gear
 	for(var/gear_slot in hud_data.gear)
@@ -89,27 +92,6 @@
 		using.color = ui_color
 		using.alpha = ui_alpha
 		static_inventory += using
-
-		inv_box = new /obj/screen/inventory/hand/right()
-		inv_box.icon = ui_style
-		if(owner && !owner.hand)	//This being 0 or null means the right hand is in use
-			inv_box.add_overlay("hand_active")
-		inv_box.slot_id = SLOT_R_HAND
-		inv_box.color = ui_color
-		inv_box.alpha = ui_alpha
-		r_hand_hud_object = inv_box
-		static_inventory += inv_box
-
-		inv_box = new /obj/screen/inventory/hand()
-		inv_box.setDir(EAST)
-		inv_box.icon = ui_style
-		if(owner?.hand)	//This being 1 means the left hand is in use
-			inv_box.add_overlay("hand_active")
-		inv_box.slot_id = SLOT_L_HAND
-		inv_box.color = ui_color
-		inv_box.alpha = ui_alpha
-		l_hand_hud_object = inv_box
-		static_inventory += inv_box
 
 		using = new /obj/screen/swap_hand/human()
 		using.icon = ui_style

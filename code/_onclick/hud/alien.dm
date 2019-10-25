@@ -50,6 +50,9 @@
 	var/obj/screen/using
 	var/obj/screen/inventory/inv_box
 
+//hands
+	build_hand_slots()
+
 	using = new /obj/screen/act_intent/corner()
 	using.alpha = ui_alpha
 	using.icon_state = owner.a_intent
@@ -67,24 +70,6 @@
 	using.icon = 'icons/mob/screen/alien.dmi'
 	using.alpha = ui_alpha
 	static_inventory += using
-
-	inv_box = new /obj/screen/inventory/hand/right()
-	inv_box.icon = 'icons/mob/screen/alien.dmi'
-	using.alpha = ui_alpha
-	if(owner && !owner.hand)	//This being 0 or null means the right hand is in use
-		using.add_overlay("hand_active")
-	inv_box.slot_id = SLOT_R_HAND
-	r_hand_hud_object = inv_box
-	static_inventory += inv_box
-
-	inv_box = new /obj/screen/inventory/hand()
-	inv_box.icon = 'icons/mob/screen/alien.dmi'
-	using.alpha = ui_alpha
-	if(owner?.hand)	//This being 1 means the left hand is in use
-		inv_box.add_overlay("hand_active")
-	inv_box.slot_id = SLOT_L_HAND
-	l_hand_hud_object = inv_box
-	static_inventory += inv_box
 
 	using = new /obj/screen/swap_hand()
 	using.icon = 'icons/mob/screen/alien.dmi'

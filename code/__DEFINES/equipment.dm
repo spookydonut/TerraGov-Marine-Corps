@@ -144,8 +144,9 @@
 #define SLOT_R_STORE		14
 #define SLOT_ACCESSORY		15
 #define SLOT_S_STORE		16
-#define SLOT_L_HAND			17
-#define SLOT_R_HAND			18
+/// wherever you provide a slot for hands you provide SLOT_HANDS.
+/// SLOT_HANDS as a slot will pick ANY available hand
+#define SLOT_HANDS			17
 #define SLOT_HANDCUFFED		19
 #define SLOT_LEGCUFFED		20
 #define SLOT_IN_BOOT		21

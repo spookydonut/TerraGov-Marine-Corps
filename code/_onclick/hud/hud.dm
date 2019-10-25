@@ -14,8 +14,6 @@
 	var/show_intent_icons = 0
 	var/hotkey_ui_hidden = 0	//This is to hide the buttons that can be used via hotkeys. (hotkeybuttons list of buttons)
 
-	var/obj/screen/r_hand_hud_object
-	var/obj/screen/l_hand_hud_object
 	var/obj/screen/action_intent
 	var/obj/screen/move_intent
 	var/obj/screen/alien_plasma_display
@@ -59,8 +57,11 @@
 	var/obj/screen/action_button/hide_toggle/hide_actions_toggle
 	var/action_buttons_hidden = 0
 
+	var/list/hand_slots // /obj/screen/inventory/hand objects, assoc list of "[held_index]" = object
 	var/list/obj/screen/plane_master/plane_masters = list() // see "appearance_flags" in the ref, assoc list of "[plane]" = object
 
+	// subtypes can override this to force a specific UI style
+	var/ui_style
 
 /datum/hud/New(mob/owner)
 	mymob = owner
@@ -273,3 +274,36 @@
 		to_chat(usr, "<span class ='info'>Switched HUD mode. Press F12 to toggle.</span>")
 	else
 		to_chat(usr, "<span class ='warning'>This mob type does not use a HUD.</span>")
+
+
+//(re)builds the hand ui slots, throwing away old ones
+//not really worth jugglying existing ones so we just scrap+rebuild
+//9/10 this is only called once per mob and only for 2 hands
+/datum/hud/proc/build_hand_slots()
+	for(var/h in hand_slots)
+		var/obj/screen/inventory/hand/H = hand_slots[h]
+		if(H)
+			static_inventory -= H
+	hand_slots = list()
+	var/obj/screen/inventory/hand/hand_box
+	for(var/i in 1 to mymob.held_items.len)
+		hand_box = new /obj/screen/inventory/hand()
+		hand_box.name = mymob.get_held_index_name(i)
+		hand_box.icon = ui_style
+		hand_box.icon_state = "hand_[mymob.held_index_to_dir(i)]"
+		hand_box.screen_loc = ui_hand_position(i)
+		hand_box.held_index = i
+		hand_slots["[i]"] = hand_box
+		hand_box.hud = src
+		static_inventory += hand_box
+		hand_box.update_icon()
+
+	var/i = 1
+	for(var/obj/screen/swap_hand/SH in static_inventory)
+		SH.screen_loc = ui_swaphand_position(mymob,!(i % 2) ? 2: 1)
+		i++
+	for(var/obj/screen/human/equip/E in static_inventory)
+		E.screen_loc = ui_equip_position(mymob)
+
+	if(ismob(mymob) && mymob.hud_used == src)
+		show_hud(hud_version)

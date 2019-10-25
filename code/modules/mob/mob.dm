@@ -211,13 +211,6 @@
 	if(istype(W))
 		equip_to_slot_if_possible(W, slot, FALSE) // equiphere
 
-/mob/proc/put_in_any_hand_if_possible(obj/item/W as obj, del_on_fail = FALSE, warning = FALSE, redraw_mob = TRUE)
-	if(equip_to_slot_if_possible(W, SLOT_L_HAND, TRUE, del_on_fail, warning, redraw_mob))
-		return TRUE
-	else if(equip_to_slot_if_possible(W, SLOT_R_HAND, TRUE, del_on_fail, warning, redraw_mob))
-		return TRUE
-	return FALSE
-
 //This is a SAFE proc. Use this instead of equip_to_splot()!
 //set del_on_fail to have it delete W if it fails to equip
 //unset redraw_mob to prevent the mob from being redrawn at the end.

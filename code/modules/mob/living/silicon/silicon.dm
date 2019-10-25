@@ -35,10 +35,6 @@
 	return
 
 
-/mob/living/silicon/get_held_item()
-	return
-
-
 /mob/living/silicon/get_inactive_held_item()
 	return
 

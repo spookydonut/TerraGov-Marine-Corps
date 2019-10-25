@@ -313,14 +313,10 @@
 			return FALSE
 
 		switch(slot)
-			if(SLOT_L_HAND)
-				if(H.l_hand)
-					return FALSE
-				return TRUE
-			if(SLOT_R_HAND)
-				if(H.r_hand)
-					return FALSE
-				return TRUE
+			if(SLOT_HANDS)
+				if(H.get_empty_held_indexes())
+					return TRUE
+				return FALSE
 			if(SLOT_WEAR_MASK)
 				if(H.wear_mask)
 					return FALSE
@@ -536,14 +532,10 @@
 		//START MONKEY
 		var/mob/living/carbon/monkey/MO = M
 		switch(slot)
-			if(SLOT_L_HAND)
-				if(MO.l_hand)
-					return FALSE
-				return TRUE
-			if(SLOT_R_HAND)
-				if(MO.r_hand)
-					return FALSE
-				return TRUE
+			if(SLOT_HANDS)
+				if(MO.get_empty_held_indexes())
+					return TRUE
+				return FALSE
 			if(SLOT_WEAR_MASK)
 				if(MO.wear_mask)
 					return FALSE

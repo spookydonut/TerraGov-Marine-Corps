@@ -3,6 +3,9 @@
 	var/obj/screen/using
 	var/obj/screen/inventory/inv_box
 
+//hands
+	build_hand_slots()
+
 	using = new /obj/screen/act_intent()
 	using.icon = ui_style
 	using.alpha = ui_alpha
@@ -23,28 +26,6 @@
 	using.color = ui_color
 	using.alpha = ui_alpha
 	static_inventory += using
-
-	inv_box = new /obj/screen/inventory/hand/right()
-	inv_box.icon = ui_style
-	inv_box.color = ui_color
-	inv_box.alpha = ui_alpha
-	if(owner && !owner.hand)	//This being 0 or null means the right hand is in use
-		inv_box.add_overlay("hand_active")
-	inv_box.slot_id = SLOT_R_HAND
-	inv_box.layer = HUD_LAYER
-	r_hand_hud_object = inv_box
-	static_inventory += inv_box
-
-	inv_box = new /obj/screen/inventory/hand()
-	inv_box.icon = ui_style
-	inv_box.color = ui_color
-	inv_box.alpha = ui_alpha
-	if(owner?.hand)	//This being 1 means the left hand is in use
-		inv_box.add_overlay("hand_active")
-	inv_box.slot_id = SLOT_L_HAND
-	inv_box.layer = HUD_LAYER
-	l_hand_hud_object = inv_box
-	static_inventory += inv_box
 
 	using = new /obj/screen/swap_hand()
 	using.color = ui_color
